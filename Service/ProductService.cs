@@ -27,9 +27,24 @@ namespace Service
             }
         }
 
-        public List<Product> GetAllProducts()
+        public bool DeleteProduct(int id)
         {
-            return _context.Product.ToList();
+            try
+            {
+                var product = _context.Product.Find(id);
+                if (product != null)
+                {
+                    _context.Product.Remove(product);
+                    _context.SaveChanges();
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in DeleteProduct: {ex.Message}");
+                return false;
+            }
         }
 
         public Product GetProductById(int id)
@@ -59,25 +74,10 @@ namespace Service
                 return false;
             }
         }
-
-        public bool DeleteProduct(int id)
+        public List<Product> GetAllProducts()
         {
-            try
-            {
-                var product = _context.Product.Find(id);
-                if (product != null)
-                {
-                    _context.Product.Remove(product);
-                    _context.SaveChanges();
-                    return true;
-                }
-                return false;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error in DeleteProduct: {ex.Message}");
-                return false;
-            }
+            return _context.Product.ToList();
         }
+
     }
 }

@@ -7,7 +7,7 @@ namespace Service
     {
         private readonly FinalProjectDbContext _context;
 
-   
+
         public PersonService(FinalProjectDbContext context)
         {
             _context = context;
@@ -28,9 +28,24 @@ namespace Service
             }
         }
 
-        public List<Person> GetAllPersons()
+     public bool DeletePerson(int id)
         {
-            return _context.Person.ToList();
+            try
+            {
+                var person = _context.Person.Find(id);
+                if (person != null)
+                {
+                    _context.Person.Remove(person);
+                    _context.SaveChanges();
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in DeletePerson: {ex.Message}");
+                return false;
+            }
         }
 
         public Person GetPersonById(int id)
@@ -61,24 +76,10 @@ namespace Service
             }
         }
 
-        public bool DeletePerson(int id)
+   
+        public List<Person> GetAllPersons()
         {
-            try
-            {
-                var person = _context.Person.Find(id);
-                if (person != null)
-                {
-                    _context.Person.Remove(person);
-                    _context.SaveChanges();
-                    return true;
-                }
-                return false;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error in DeletePerson: {ex.Message}");
-                return false;
-            }
+            return _context.Person.ToList();
         }
     }
 }
